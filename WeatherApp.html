@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Web App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="left">
+                <img src="weather.png">
+            </div>
+            <span class="weather-text">Weather</span>
+            <div class="right">
+                <input type="text" placeholder="enter city name" spellcheck="false">
+                <button> <img src="find.png"></button>
+            </div>
+        </nav>
+    </header>
+    <div class="error">
+        <p>(Invalid city name)</p>
+    </div>
+    <div class="Weather">
+        <img src="rainy.png" class="weather-icon">
+        <h1 class="city">Noida
+        </h1>
+    </div>
+
+    <div id="container">
+
+        <div class="box">
+            <div class="text">
+                <h1>Temperature </h1>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="text">
+
+                <h1>Humidity</h1>
+            </div>
+        </div>
+        <div class="box">
+            <div class="text">
+                <h1>Wind Speed</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="temp">33°C
+
+    </div>
+
+
+    <div class="humidity">49%
+    </div>
+    <div class="humidityLogo">
+        <img src="humidityLogo.png">
+    </div>
+    <div class="wind">2.57 km/hr
+    </div>
+    <div class="windlogo">
+        <img src="windLogo.png">
+    </div>
+    <div class="vertical"></div>
+    <div class="vertical2">
+    </div>
+    <hr class="horizontal">
+    <hr class="horizontal2">
+
+    <footer>
+        <div class="footer">
+            <h3>Copyright &copy Anurags Weather App</h3>
+        </div>
+    </footer>
+
+
+
+
+    <script>
+
+        const apikey = "f44f1aa46a50bd4badcecb1191cc0cbd";
+        const apiurl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+        const searchBox = document.querySelector(".right input");
+        const searchBtn = document.querySelector(".right button");
+        const weatherIcon = document.querySelector(".weather-icon")
+
+        async function checkWeather(city) {
+            const response = await fetch(apiurl + city + `&appid=${apikey}`);
+
+            if (response.status == 404) {
+                document.querySelector(".error").style.display = "block";
+                document.querySelector(".Weather").style.display = "none";
+            }
+            else {
+                var data = await response.json();
+                console.log(data)
+
+
+                document.querySelector(".city").innerHTML = data.name;
+                document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";
+                document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+                document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+
+                if (data.weather[0].main == "Clouds") {
+                    weatherIcon.src = "cloud.png";
+                }
+                else if (data.weather[0].main == "Clear") {
+                    weatherIcon.src = "sun.png";
+
+                }
+                else if (data.weather[0].main == "Rain") {
+                    weatherIcon.src = "rainy.png";
+
+                }
+                else if (data.weather[0].main == "Snow") {
+                    weatherIcon.src = "snow.png";
+                }
+                else if (data.weather[0].main == "Thunderstorm") {
+                    weatherIcon.src = "thunderstorm.png";
+                }
+                else if (data.weather[0].main == "Haze") {
+                    weatherIcon.src = "haze.png";
+                }
+                else if (data.weather[0].main == "Mist") {
+                    weatherIcon.src = "mist.png";
+                }
+                document.querySelector(".Weather").style.display = "block";
+                document.querySelector(".error").style.display = "none";
+            }
+        }
+
+        
+
+
+
+        searchBtn.addEventListener("click", () => {
+            checkWeather(searchBox.value);
+
+        })
+
+
+
+
+    </script>
+</body>
+
+</html>
